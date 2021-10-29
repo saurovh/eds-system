@@ -1,0 +1,46 @@
+version: '3.2'
+services:
+  mysql:
+    image: percona:5.7
+    ports:
+      - ${MYSQL_DEFAULT_PORT}:3306
+    networks:
+      main:
+    volumes:
+      - "./docker/mysql/data:/var/lib/mysql"
+      - "./docker/mysql/my.cnf:/etc/my.cnf.d/my.cnf"
+    environment:
+      TZ: ${TIMEZONE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_DEFAULT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DEFAULT_DATABASE}
+      MYSQL_PASSWORD: ${MYSQL_DEFAULT_PASSWORD}
+  php-fpm:
+    build:
+      context: eds-server
+      args:
+        EDS_SERVER_WORKIDR: /var/www
+        TIMEZONE: ${TIMEZONE}
+    ports:
+      - ${LARAVEL_WEBSOCKETS_PORT}:6001
+    networks:
+      main:
+    volumes:
+      - "./eds-server:/var/www"
+      - "./eds-server/php.ini:/usr/local/etc/php/conf.d/php.ini"
+    #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8080:80"
+      - "443:443"
+    volumes:
+      - ./eds-server:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      main:
+networks:
+  main:
+    driver: bridge
