@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::post('/login', 'AuthController@login');
 
 /**
  * @todo:: Should protect the endpoint either by limiting server who can send request

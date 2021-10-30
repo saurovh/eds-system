@@ -2,23 +2,20 @@
 
 namespace App\Exceptions;
 
+use App\Traits\RestExceptionHandlerTrait;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * A list of the exception types that are not reported.
-     *
-     * @var array
-     */
-    protected $dontReport = [
-        //
-    ];
+    use RestExceptionHandlerTrait;
 
     /**
      * A list of the inputs that are never flashed for validation exceptions.
-     *
      * @var array
      */
     protected $dontFlash = [
@@ -27,25 +24,35 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Report or log an exception.
-     *
-     * @param  \Exception  $exception
-     * @return void
+     * A list of the exception types that should not be reported.
+     * @var array
      */
-    public function report(Exception $exception)
-    {
-        parent::report($exception);
-    }
+    protected $dontReport = [
+        AuthorizationException::class,
+        HttpException::class,
+        ModelNotFoundException::class,
+        ValidationException::class,
+    ];
 
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception               $exception
+     *
+     * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
     public function render($request, Exception $exception)
     {
-        return parent::render($request, $exception);
+        return $this->getJsonResponseForException($request, $exception);
+    }
+
+    /**
+     * Determine if the application is in debug mode.
+     * @return Boolean
+     */
+    public function isDebugMode()
+    {
+        return (boolean)env('APP_DEBUG');
     }
 }
