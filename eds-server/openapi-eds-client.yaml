@@ -1,0 +1,321 @@
+openapi: "3.0.0"
+info:
+    description: "Softcode test assignment API description."
+    version: "1.0.0"
+    title: "Softcode Test Project"
+tags:
+    - name: "Employees"
+      description: ""
+    - name: "Employee Duties"
+      description: ""
+servers:
+    - url: "https://api.example.com/v1"
+      description: "Optional server description, e.g. Main (production) server"
+paths:
+    "/employees":
+        post:
+            security:
+                - bearerAuth: []
+            operationId: postEmployee
+            tags:
+                - Employees
+            summary: "Add new employee record"
+            description: ""
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Employee'
+            responses:
+                '200':
+                    description: "Successfully created employee record(s)"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/EmployeeResponse'
+                '405':
+                    description: "Invalid input"
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+        put:
+            operationId: putEmployee
+            security:
+                - bearerAuth: []
+            tags:
+                - Employees
+            summary: "Update an employee record"
+            description: ""
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/EmployeesArray'
+            responses:
+                "200":
+                    description: "Successfully updated employee(s)"
+                "400":
+                    description: "Invalid ID supplied"
+                "404":
+                    description: "Employee not found"
+                "405":
+                    description: "Validation exception"
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+        get:
+            security:
+                - bearerAuth: []
+            operationId: getEmployees
+            tags:
+                - Employees
+            summary: "Get all employees"
+            description: ""
+            responses:
+                '200':
+                    description: All employees
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/EmployeeResponse'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+    "/employees/{id}":
+        get:
+            operationId: getEmployee
+            tags:
+                - Employees
+            summary: "Get employee by id"
+            description: ""
+            parameters:
+                - in: path
+                  required: true
+                  name: id
+                  description: ""
+                  schema:
+                      type: integer
+            responses:
+                '200':
+                    description: Employee
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Employee'
+                "400":
+                    description: "Invalid ID supplied"
+                "404":
+                    description: "Employee not found"
+        delete:
+            operationId: deleteEmployee
+            tags:
+                - Employees
+            summary: "Delete an employee record"
+            description: ""
+            parameters:
+                - in: path
+                  required: true
+                  name: id
+                  description: ""
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: "Sucessfully removed employee record"
+                "400":
+                    description: "Invalid ID supplied"
+                "404":
+                    description: "Employee not found"
+    "/employee-duties":
+        post:
+            operationId: postEmployeeDuty
+            tags:
+                - Employee Duties
+            summary: "Add new employee duty record"
+            description: ""
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/EmployeeDutiesArray'
+            responses:
+                "200":
+                    description: "Successfully created employee duty"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/EmployeeDutiesArray'
+                "405":
+                    description: "Invalid input"
+        put:
+            operationId: putEmployeeDuty
+            tags:
+                - Employee Duties
+            summary: "Update an employee duty record"
+            description: ""
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/EmployeeDuty'
+            responses:
+                "200":
+                    description: "Successfully updated employee duty record"
+                "400":
+                    description: "Invalid ID supplied"
+                "404":
+                    description: "Employee duty not found"
+                "405":
+                    description: "Validation exception"
+        get:
+            operationId: getEmployeeDuties
+            tags:
+                - Employee Duties
+            summary: "Get all employee duties if user is admin, otherwise self"
+            description: ""
+            parameters:
+                - in: query
+                  required: false
+                  name: duty_start
+                  description: "Filter for duty start (ex. 2021-05-26)"
+                  schema:
+                      type: string
+                      format: date-time
+                      example: "2021-05-26 12:00:00"
+                - in: query
+                  required: false
+                  name: duty_end
+                  description: "Filter for duty end (ex. 2021-05-27)"
+                  schema:
+                      type: string
+                      format: date-time
+                      example: "2021-05-27 14:00:00"
+            responses:
+                '200':
+                    description: All employee duties
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/EmployeeDutiesArray'
+    "/employee-duties/{id}":
+        get:
+            operationId: getEmployeeDuty
+            tags:
+                - Employee Duties
+            summary: "Get employee duty by id"
+            description: ""
+            parameters:
+                - in: path
+                  required: true
+                  name: id
+                  description: ""
+                  schema:
+                      type: integer
+            responses:
+                '200':
+                    description: Employee duty
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/EmployeeDuty'
+                "400":
+                    description: "Invalid ID supplied"
+                "404":
+                    description: "Employee duty not found"
+        delete:
+            operationId: deleteEmployeeDuty
+            tags:
+                - Employee Duties
+            summary: "Delete an employee duty record"
+            description: ""
+            parameters:
+                - in: path
+                  required: true
+                  name: id
+                  description: ""
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: "Successfully removed employee duty"
+                "400":
+                    description: "Invalid ID supplied"
+                "404":
+                    description: "Employee duty not found"
+components:
+    securitySchemes:
+        bearerAuth:            # arbitrary name for the security scheme
+            type: http
+            scheme: bearer
+            bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+    responses:
+        UnauthorizedError:
+            description: Access token is missing or invalid
+    schemas:
+        EmployeeDuty:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 1
+                employeeId:
+                    type: integer
+                    example: 10000000
+                dutyStart:
+                    type: string
+                    format: date-time
+                dutyEnd:
+                    type: string
+                    format: date-time
+        EmployeeDutyDetail:
+            allOf:
+                - $ref: '#/components/schemas/Employee'
+                - type: object
+                  properties:
+                      name:
+                          type: string
+                          example: "John Doe"
+
+        EmployeeDutiesArray:
+            type: array
+            items:
+                $ref: "#/components/schemas/EmployeeDutyDetail"
+        Employee:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 10000000
+                name:
+                    type: string
+                    example: "John Doe"
+                phone:
+                    type: string
+                    example: "+46701234567"
+                email:
+                    type: string
+                    example: "john.doe@softcode.se"
+                joiningDate:
+                    type: string
+                    format: date-time
+        EmployeeResponse:
+            allOf:
+                - $ref: '#/components/schemas/Employee'
+                - type: object
+                  properties:
+                      userId:
+                          type: integer
+                          example: 10000
+                      type:
+                          type: integer
+                          example: 1
+                          maximum: 255
+                          minimum: 0
+        EmployeesArray:
+            type: array
+            items:
+                $ref: "#/components/schemas/EmployeeResponse"
+
+
+

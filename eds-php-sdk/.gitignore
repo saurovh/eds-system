@@ -1,0 +1,13 @@
+# IDE project files
+.buildpath
+.project
+.settings
+.idea/
+nbproject/
+
+# media cache files
+.DS_Store
+.DS_Store?
+
+# composer
+/vendor

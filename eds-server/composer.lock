@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63565bf0f338bd012d464ced1d40c388",
+    "content-hash": "8c9ae9ea5eea29d368f35b1ba833b15f",
     "packages": [
         {
             "name": "beyondcode/laravel-websockets",
@@ -3864,6 +3864,37 @@
                 "source": "https://github.com/ringcentral/psr7/tree/master"
             },
             "time": "2018-05-29T20:21:04+00:00"
+        },
+        {
+            "name": "saurovh/eds-php-sdk",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "../eds-php-sdk",
+                "reference": "020182a74be3cecd2adbd95e018d0665f6712d94"
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.2",
+                "guzzlehttp/psr7": "^1.7",
+                "psr/log": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Saurovh\\EdsPhpSdk\\": "src/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Msi Saurovh",
+                    "email": "saurovh@eskimi.com"
+                }
+            ],
+            "description": "EDS system api client",
+            "transport-options": {
+                "symlinks": true,
+                "relative": true
+            }
         },
         {
             "name": "swiftmailer/swiftmailer",

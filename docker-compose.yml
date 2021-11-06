@@ -26,6 +26,7 @@ services:
       main:
     volumes:
       - "./eds-server:/var/www"
+      - "./eds-php-sdk:/var/eds-php-sdk"
       - "./eds-server/php.ini:/usr/local/etc/php/conf.d/php.ini"
     #Nginx Service
   webserver:

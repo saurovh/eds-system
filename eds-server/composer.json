@@ -7,13 +7,25 @@
         "laravel"
     ],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../eds-php-sdk",
+            "options": {
+                "symlinks": true
+            }
+        }
+    ],
     "require": {
         "php": "^7.1.3",
         "beyondcode/laravel-websockets": "1.3.*",
         "fideloper/proxy": "^4.0",
+        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/psr7": "^1.7",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
         "pusher/pusher-php-server": "~3.0",
+        "saurovh/eds-php-sdk": "1.0.0",
         "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
@@ -60,6 +72,18 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "test-feature": [
+            "./vendor/bin/phpunit -d memory_limit=-1 --colors=always --order-by=defects --configuration=phpunit.xml --debug --verbose"
+        ],
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "DSP_ENV=testing composer install --prefer-dist --no-interaction --no-scripts --no-progress --no-ansi",
+            "@test-feature"
+        ],
+        "test-dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "@test-feature"
         ]
     }
 }

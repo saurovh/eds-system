@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 
 /*
@@ -14,9 +15,25 @@ use Illuminate\Support\Facades\Log;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    Route::middleware('admin')->group(function () {
+        Route::get('/employees', 'EmployeeController@get');
+        Route::post('/employees', 'EmployeeController@create');
+        Route::put('/employees/{id}', 'EmployeeController@update');
+    });
+
+    Route::get('/employee-duties', 'EmployeeDutyController@get');
+    Route::get('/employee-duties/{id}', 'EmployeeDutyController@getById');
+    Route::middleware('admin')->group(function () {
+        Route::post('/employee-duties', 'EmployeeDutyController@create');
+        Route::put('/employee-duties/{id}', 'EmployeeDutyController@update');
+        Route::delete('/employee-duties/{id}', 'EmployeeDutyController@delete');
+    });
 });
+
 Route::post('/login', 'AuthController@login');
 
 /**
